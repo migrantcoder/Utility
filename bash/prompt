@@ -1,0 +1,31 @@
+#
+# History
+#
+
+# Based on http://www.debian-administration.org/article/543/Bash_eternal_history
+function update_bash_eternal_history {
+    echo $$ $USER "$(history 1)" >> ~/.bash_eternal_history;
+}
+
+#
+# Git
+#
+
+# Very quick and dirty.
+function set_git_branch {
+    local output=`git status 2>/dev/null|head -n 1|cut -f 3 -d ' '`;
+    if [[ "${output}" == "" ]]
+    then
+        git_branch="";
+    else
+        git_branch="(${output})";
+    fi
+}
+
+
+#
+# Command Line Prompt
+#
+
+PROMPT_COMMAND="update_bash_eternal_history; set_git_branch; ${PROMPT_COMMAND}"
+export PS1="\h:\W \u \${git_branch}\$ "
